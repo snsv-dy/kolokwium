@@ -77,7 +77,7 @@ class OvenTest {
         inorder.verify(heating_module).heater(heatUpSettings);
         inorder.verify(heating_module).heater(heatingStageSettings);
     }
-    
+
     private HeatingSettings makeSettings(int targetTemp, int stageTime) {
         return HeatingSettings.builder()
                 .withTargetTemp(targetTemp)
@@ -86,8 +86,20 @@ class OvenTest {
     }
 
     @Test
-    void runningOvenWithThermoCirculationStageInProgram_shouldCompleteWithoutExceptions() {
+    void runningOvenWithThermoCirculationStageInProgram_shouldCompleteWithoutExceptions() throws HeatingException {
+        ProgramStage stage = ProgramStage.builder().withHeat(HeatType.THERMO_CIRCULATION).build();
+        BakingProgram program = BakingProgram.builder()
+                .withStages(List.of(stage))
+                .build();
 
+        oven.start(program);
+
+        InOrder inOrder = Mockito.inOrder(heating_module, fan);
+
+        HeatingSettings termoSettings = makeSettings(stage.getTargetTemp(), stage.getStageTime());
+        inOrder.verify(fan).on();
+        inOrder.verify(heating_module).termalCircuit(termoSettings);
+        inOrder.verify(fan).off();
     }
 
     @Test
