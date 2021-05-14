@@ -70,19 +70,19 @@ class OvenTest {
 
         oven.start(program);
 
-        HeatingSettings heatUpSettings = HeatingSettings.builder()
-                .withTargetTemp(initialTemp)
-                .withTimeInMinutes(HEAT_UP_AND_FINISH_SETTING_TIME)
-                .build();
+        HeatingSettings heatUpSettings = makeSettings(initialTemp, HEAT_UP_AND_FINISH_SETTING_TIME);
+        HeatingSettings heatingStageSettings = makeSettings(stage.getTargetTemp(), stage.getStageTime());
+
         InOrder inorder = Mockito.inOrder(heating_module);
-
         inorder.verify(heating_module).heater(heatUpSettings);
-        HeatingSettings heatingStageSettings = HeatingSettings.builder()
-                .withTargetTemp(stage.getTargetTemp())
-                .withTimeInMinutes(stage.getStageTime())
-                .build();
-
         inorder.verify(heating_module).heater(heatingStageSettings);
+    }
+    
+    private HeatingSettings makeSettings(int targetTemp, int stageTime) {
+        return HeatingSettings.builder()
+                .withTargetTemp(targetTemp)
+                .withTimeInMinutes(stageTime)
+                .build();
     }
 
     @Test
