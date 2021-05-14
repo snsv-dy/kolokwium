@@ -28,11 +28,6 @@ class OvenTest {
     private Fan fan;
     private Oven oven;
 
-    @Test
-    void itCompiles() {
-        MatcherAssert.assertThat(true, equalTo(true));
-    }
-
     @BeforeEach
     void setUp() {
         oven = new Oven(heating_module, fan);
