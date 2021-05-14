@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -112,5 +114,19 @@ class OvenTest {
 
         Mockito.doThrow(HeatingException.class).when(heating_module).grill(any());
         assertThrows(OvenException.class, () -> oven.start(program));
+    }
+
+    @Test
+    void runningOvenWithHeatingStageInProgramAndFanTurnedOn_shouldTurnFanOff() {
+        ProgramStage stage = ProgramStage.builder().withHeat(HeatType.HEATER).build();
+        BakingProgram program = BakingProgram.builder()
+                .withStages(List.of(stage))
+                .build();
+
+        when(fan.isOn()).thenReturn(true);
+
+        oven.start(program);
+
+        verify(fan).off();
     }
 }
