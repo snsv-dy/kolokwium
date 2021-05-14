@@ -1,15 +1,16 @@
 package edu.iis.mto.oven;
 
 import static edu.iis.mto.oven.Oven.HEAT_UP_AND_FINISH_SETTING_TIME;
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.verify;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -103,7 +104,13 @@ class OvenTest {
     }
 
     @Test
-    void runningOvenWithThermoCirculationStageInProgram_HeatingModuleThrowsException_ovenShouldThrow_OvenException() {
+    void runningOvenWithGrillStageInProgram_HeatingModuleThrowsException_ovenShouldThrow_OvenException() throws HeatingException {
+        ProgramStage stage = ProgramStage.builder().withHeat(HeatType.GRILL).build();
+        BakingProgram program = BakingProgram.builder()
+                .withStages(List.of(stage))
+                .build();
 
+        Mockito.doThrow(HeatingException.class).when(heating_module).grill(any());
+        assertThrows(OvenException.class, () -> oven.start(program));
     }
 }
