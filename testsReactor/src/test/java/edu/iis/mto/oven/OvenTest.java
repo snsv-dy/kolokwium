@@ -15,4 +15,28 @@ class OvenTest {
         MatcherAssert.assertThat(true, equalTo(true));
     }
 
+    @Test
+    void runningOvenWithHeatingStageInProgram_shouldCompleteWithoutExceptions(){
+
+    }
+
+    @Test
+    void runningOvenWithGrillStageInProgram_shouldCompleteWithoutExceptions(){
+
+    }
+
+    @Test
+    void runningOvenWithInitialTemperatureAndHeatingStageInProgram_shouldCompleteWithoutExceptions(){
+
+    }
+
+    @Test
+    void runningOvenWithThermoCirculationStageInProgram_shouldCompleteWithoutExceptions(){
+
+    }
+
+    @Test
+    void runningOvenWithThermoCirculationStageInProgram_HeatingModuleThrowsException_ovenShouldThrow_OvenException(){
+
+    }
 }
