@@ -61,7 +61,28 @@ class OvenTest {
 
     @Test
     void runningOvenWithInitialTemperatureAndHeatingStageInProgram_shouldCompleteWithoutExceptions() {
+        ProgramStage stage = ProgramStage.builder().withHeat(HeatType.HEATER).build();
+        int initialTemp = 180;
+        BakingProgram program = BakingProgram.builder()
+                .withStages(List.of(stage))
+                .withInitialTemp(initialTemp)
+                .build();
 
+        oven.start(program);
+
+        HeatingSettings heatUpSettings = HeatingSettings.builder()
+                .withTargetTemp(initialTemp)
+                .withTimeInMinutes(HEAT_UP_AND_FINISH_SETTING_TIME)
+                .build();
+        InOrder inorder = Mockito.inOrder(heating_module);
+
+        inorder.verify(heating_module).heater(heatUpSettings);
+        HeatingSettings heatingStageSettings = HeatingSettings.builder()
+                .withTargetTemp(stage.getTargetTemp())
+                .withTimeInMinutes(stage.getStageTime())
+                .build();
+
+        inorder.verify(heating_module).heater(heatingStageSettings);
     }
 
     @Test
