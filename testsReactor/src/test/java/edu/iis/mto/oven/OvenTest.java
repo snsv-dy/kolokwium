@@ -48,8 +48,15 @@ class OvenTest {
     }
 
     @Test
-    void runningOvenWithGrillStageInProgram_shouldCompleteWithoutExceptions() {
+    void runningOvenWithGrillStageInProgram_shouldCompleteWithoutExceptions() throws HeatingException {
+        ProgramStage stage = ProgramStage.builder().withHeat(HeatType.GRILL).build();
+        BakingProgram program = BakingProgram.builder()
+                .withStages(List.of(stage))
+                .build();
 
+        oven.start(program);
+
+        verify(heating_module).grill(any());
     }
 
     @Test
